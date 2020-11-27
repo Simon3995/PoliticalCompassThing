@@ -12,8 +12,9 @@ document.addEventListener('mouseup', () => {
 	Events.initMousePos = null;
 });
 
-document.addEventListener('mousemove' () => {
+document.addEventListener('mousemove', e => {
 	if (Events.drag) {
 		// TODO
+		frame();
 	}
 });

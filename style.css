@@ -1,7 +1,12 @@
 body {
 	background-color: #222;
+	text-align: center;
+	margin-top: 40px;
 }
 
 #canvas {
-	background-color: #fff2;
+	height: 800px;
+	width: 800px;
+	
+	letter-spacing: 3px;
 }

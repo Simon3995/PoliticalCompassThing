@@ -3,9 +3,11 @@ let ctx = c.getContext("2d");
 c.width = 800;
 c.height = 800;
 
-canvas_stuff = {
+graphic = {
 	offsetX: 0,
 	offsetY: 0,
+	visualOffsetX: 0,
+	visualOffsetY: 0,
 };
 
 update();
@@ -13,6 +15,10 @@ update();
 function update() {
 	// todo: make next line not be crappy golf logic
 	c.width|=0;
+	
+	graphic.visualOffsetX = (2*graphic.visualOffsetX + graphic.offsetX) / 3;
+	graphic.visualOffsetY = (2*graphic.visualOffsetY + graphic.offsetY) / 3;
+	
 	ringCompass();
 	drawText();
 	requestAnimationFrame(update);
@@ -47,18 +53,18 @@ function frame() {
 function ringCompass() {
 	segments = 12;
 	
-	center = [c.width / 2 - canvas_stuff.offsetX, c.height / 2 - canvas_stuff.offsetY];
+	center = [c.width / 2 - graphic.visualOffsetX, c.height / 2 - graphic.visualOffsetY];
 	
+	ctx.lineWidth = 150;
 	// draw the colour segments
 	for (let i=0; i<segments; i++) {
-		ctx.lineWidth = 150;
 		ctx.strokeStyle = "hsl("+(360*i/segments - 100)%360+", 65%, 65%)";
 		ctx.beginPath();
 		ctx.arc(
 			...center,
 			250,
-			2*Math.PI - (i*2*Math.PI / segments),
-			2*Math.PI - ((i+1.02)*2*Math.PI / segments),
+			2*Math.PI * (1 - i / segments),
+			2*Math.PI * (1 - (i+1.02) / segments),
 			true
 		);
 		ctx.stroke();
@@ -78,7 +84,7 @@ function ringCompass() {
 	});
 	
 	// draw a center circle
-	ctx.fillStyle = "#ffffff55";
+	ctx.fillStyle = "#fff5";
 	ctx.beginPath();
 	ctx.arc(
 		...center,
@@ -90,7 +96,7 @@ function ringCompass() {
 }
 
 function drawText() {
-	center = [c.width / 2 - canvas_stuff.offsetX, c.height / 2 - canvas_stuff.offsetY];
+	center = [c.width / 2 - graphic.visualOffsetX, c.height / 2 - graphic.visualOffsetY];
 	
 	ctx.font = "20px Tahoma";
 	ctx.fillStyle = "#fff";

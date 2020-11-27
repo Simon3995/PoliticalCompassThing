@@ -2,26 +2,29 @@ let Events = {
 	drag: false
 };
 
+// start dragging
 document.addEventListener('mousedown', e => {
 	Events.drag = true;
 	Events.prevMousePos = [e.x, e.y];
 });
 
+// stop dragging
 document.addEventListener('mouseup', () => {
 	Events.drag = false;
 	Events.initMousePos = null;
 });
 
+// drag
 document.addEventListener('mousemove', e => {
 	if (Events.drag) {
 		// move canvas offset
-		canvas_stuff.offsetX += Events.prevMousePos[0] - e.x;
-		canvas_stuff.offsetY += Events.prevMousePos[1] - e.y;
+		graphic.offsetX += Events.prevMousePos[0] - e.x;
+		graphic.offsetY += Events.prevMousePos[1] - e.y;
 		// limit offset
-		canvas_stuff.offsetX = Math.min(canvas_stuff.offsetX, c.width / 2);
-		canvas_stuff.offsetX = Math.max(canvas_stuff.offsetX, -c.width / 2);
-		canvas_stuff.offsetY = Math.min(canvas_stuff.offsetY, c.height / 2);
-		canvas_stuff.offsetY = Math.max(canvas_stuff.offsetY, -c.height / 2);
+		graphic.offsetX = Math.min(graphic.offsetX, c.width / 2);
+		graphic.offsetX = Math.max(graphic.offsetX, -c.width / 2);
+		graphic.offsetY = Math.min(graphic.offsetY, c.height / 2);
+		graphic.offsetY = Math.max(graphic.offsetY, -c.height / 2);
 		
 		Events.prevMousePos = [e.x, e.y];
 	}

@@ -8,8 +8,15 @@ canvas_stuff = {
 	offsetY: 0,
 };
 
-ringCompass();
-drawText();
+update();
+
+function update() {
+	// todo: make next line not be crappy golf logic
+	c.width|=0;
+	ringCompass();
+	drawText();
+	requestAnimationFrame(update);
+}
 
 function frame() {
 	// draw each of the quadrants

@@ -90,16 +90,18 @@ function ringCompass() {
 }
 
 function drawText() {
+	center = [c.width / 2 - canvas_stuff.offsetX, c.height / 2 - canvas_stuff.offsetY];
+	
 	ctx.font = "20px Tahoma";
 	ctx.fillStyle = "#fff";
 	ctx.textAlign = "center";
 	ctx.save();
-	ctx.fillText("PROGRESSIVE", 400, 765);
-	ctx.fillText("CONSERVATIVE", 400, 55);
+	ctx.fillText("PROGRESSIVE", center[0], center[1] + 365);
+	ctx.fillText("CONSERVATIVE", center[0], center[1] -345);
 	
 	ctx.rotate(-Math.PI/2);
-	ctx.fillText("LEFT", -400, 55);
+	ctx.fillText("LEFT", -center[1], center[0] - 345);
 	ctx.restore();
 	ctx.rotate(Math.PI/2);
-	ctx.fillText("RIGHT", 400, -745);
+	ctx.fillText("RIGHT", center[1], -center[0] - 345);
 }

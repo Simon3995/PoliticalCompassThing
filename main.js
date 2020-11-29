@@ -8,6 +8,7 @@ graphic = {
 	offsetY: 0,
 	visualOffsetX: 0,
 	visualOffsetY: 0,
+	segmentsPerQuad: 100,
 };
 
 update();
@@ -24,51 +25,41 @@ function update() {
 	requestAnimationFrame(update);
 }
 
-function frame() {
-	// draw each of the quadrants
-	[
-		['#ff3b5b88',0,0],
-		['#2cdb8188',0,1],
-		['#4e89d488',1,0],
-		['#f5dc0088',1,1]
-	].map(dat => {
-		ctx.fillStyle = dat[0];
-		ctx.fillRect(dat[1]*c.width/2, dat[2]*c.height/2, c.width/2, c.height/2);
-	});
-	
-	// draw the dividing lines
-	ctx.strokeStyle = "#222";
-	ctx.lineWidth = 4;
-	[
-		[[0, c.height/2], [c.width, c.height/2]],
-		[[c.width/2, 0], [c.width/2, c.height]]
-	].map(dat => {
-		ctx.beginPath();
-		ctx.moveTo(...dat[0]);
-		ctx.lineTo(...dat[1]);
-		ctx.stroke();
-	});
-}
-
 function ringCompass() {
-	segments = 12;
+	let segmentsPerQuad = graphic.segmentsPerQuad;
 	
-	center = [c.width / 2 - graphic.visualOffsetX, c.height / 2 - graphic.visualOffsetY];
+	let center = [c.width / 2 - graphic.visualOffsetX, c.height / 2 - graphic.visualOffsetY];
 	
 	ctx.lineWidth = 150;
 	// draw the colour segments
-	for (let i=0; i<segments; i++) {
-		ctx.strokeStyle = "hsl("+(360*i/segments - 100)%360+", 65%, 65%)";
-		ctx.beginPath();
-		ctx.arc(
-			...center,
-			250,
-			2*Math.PI * (1 - i / segments),
-			2*Math.PI * (1 - (i+1.02) / segments),
-			true
-		);
-		ctx.stroke();
-	}
+	[
+		[214, 60.9, 56.9],
+		[350, 100, 61.6],
+		[149, 70.9, 51.6],
+		[54, 100, 48]
+	].map((color, index, colors) => {
+		nextColor = colors[index-1 & 3];
+		for (let i = 0; i < segmentsPerQuad; i++) {
+			let segmentCenter = i / (segmentsPerQuad + 1);
+			segmentCenter = (1 + Math.tanh(10 * (segmentCenter - 0.5))) / 2;
+			let interColor = [];
+			for (let freq in color) {
+				interColor[freq] = segmentCenter * color[freq] + (1 - segmentCenter) * nextColor[freq];
+				interColor[freq] = Math.floor(interColor[freq]);
+			}
+			let fraction = Math.floor((segmentsPerQuad - 1) / 2) / (segmentsPerQuad);
+			ctx.strokeStyle = 'hsl(' + interColor[0] + ', ' + interColor[1] + '%, ' + interColor[2] + '%)';
+			ctx.beginPath();
+			ctx.arc(
+				...center,
+				250,
+				2*Math.PI * (1 - (segmentsPerQuad * (index - fraction) + i - 1.01) / (4 * segmentsPerQuad)),
+				2*Math.PI * (1 - (segmentsPerQuad * (index - fraction) + i) / (4 * segmentsPerQuad)),
+				true
+			);
+			ctx.stroke();
+		}
+	});
 	
 	// draw the dividing lines
 	ctx.strokeStyle = "#222";
@@ -96,7 +87,7 @@ function ringCompass() {
 }
 
 function drawText() {
-	center = [c.width / 2 - graphic.visualOffsetX, c.height / 2 - graphic.visualOffsetY];
+	let center = [c.width / 2 - graphic.visualOffsetX, c.height / 2 - graphic.visualOffsetY];
 	
 	ctx.font = "20px Tahoma";
 	ctx.fillStyle = "#fff";

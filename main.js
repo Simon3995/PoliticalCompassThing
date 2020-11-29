@@ -14,15 +14,14 @@ graphic = {
 update();
 
 function update() {
-	// todo: make next line not be crappy golf logic
-	c.width|=0;
+	ctx.clearRect(0,0,c.width,c.height);
 	
 	graphic.visualOffsetX = (2*graphic.visualOffsetX + graphic.offsetX) / 3;
 	graphic.visualOffsetY = (2*graphic.visualOffsetY + graphic.offsetY) / 3;
 	
 	ringCompass();
 	drawText();
-	requestAnimationFrame(update);
+	window.requestAnimationFrame(update);
 }
 
 function ringCompass() {
@@ -89,16 +88,22 @@ function ringCompass() {
 function drawText() {
 	let center = [c.width / 2 - graphic.visualOffsetX, c.height / 2 - graphic.visualOffsetY];
 	
+	// draw top and bottom text
 	ctx.font = "20px Tahoma";
 	ctx.fillStyle = "#fff";
 	ctx.textAlign = "center";
-	ctx.save();
 	ctx.fillText("PROGRESSIVE", center[0], center[1] + 365);
 	ctx.fillText("CONSERVATIVE", center[0], center[1] -345);
 	
+	// draw text rotated left
+	ctx.save();
 	ctx.rotate(-Math.PI/2);
 	ctx.fillText("LEFT", -center[1], center[0] - 345);
 	ctx.restore();
+	
+	// draw text rotated right
+	ctx.save();
 	ctx.rotate(Math.PI/2);
 	ctx.fillText("RIGHT", center[1], -center[0] - 345);
+	ctx.restore();
 }
